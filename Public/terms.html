@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - MDHub</title>
+    <link rel="shortcut icon" href="https://fyqddomrlpkowgosopyt.supabase.co/storage/v1/object/public/test//graph_6_24dp_F85149_FILL0_wght400_GRAD0_opsz24.png" type="image/x-icon">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/markdown.css">
+    <link rel="stylesheet" href="css/terms-and-policy.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=graph_6" />
+    <!-- Marked.js for rendering markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-container">
+                <span class="material-symbols-outlined">graph_6</span>
+                <h1>MDHub</h1>
+            </div>
+            <div class="header-actions">
+                <div class="search-container">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="search-input" placeholder="Search markdown files...">
+                </div>
+                <button id="new-file-btn" class="btn btn-primary">
+                    <span class="material-icons">add</span>
+                    New File
+                </button>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <span class="material-icons">dark_mode</span>
+                </button>
+                <div id="auth-container">
+                    <button id="login-btn" class="btn btn-secondary">
+                        <span class="material-icons">login</span>
+                        Login
+                    </button>
+                    <span id="user-status" class="user-status">Not logged in</span>
+                    <button id="logout-btn" class="btn btn-danger" style="display: none;">
+                        <span class="material-icons">logout</span>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="index.html">
+                            <span class="material-icons">home</span>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="explore.html">
+                            <span class="material-icons">explore</span>
+                            Explore
+                        </a>
+                    </li>
+                    <li>
+                        <a href="my-files.html">
+                            <span class="material-icons">folder</span>
+                            My Files
+                        </a>
+                    </li>
+                    <li>
+                        <a href="starred.html">
+                            <span class="material-icons">star</span>
+                            Starred
+                        </a>
+                    </li>
+                </ul>
+                <div class="sidebar-tags">
+                    <h3>Popular Tags</h3>
+                    <div class="tags-list" id="tags-list">
+                        <!-- Tags will be populated here -->
+                        <span class="tag">javascript</span>
+                        <span class="tag">tutorial</span>
+                        <span class="tag">guide</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="content-container">
+            <section id="terms-section">
+                <div class="section-header">
+                    <h2>Terms of Service</h2>
+                </div>
+                <div class="content-wrapper">
+                    <div class="terms-content">
+                        <h3>1. Acceptance of Terms</h3>
+                        <p>By accessing or using MDHub, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our service.</p>
+
+                        <h3>2. Description of Service</h3>
+                        <p>MDHub provides a platform for creating, sharing, and discovering markdown files. Our service allows users to collaborate on content, share knowledge, and build a community around markdown documentation.</p>
+
+                        <h3>3. User Accounts</h3>
+                        <p>To access certain features of the Service, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account. You agree to:</p>
+                        <ul>
+                            <li>Provide accurate and complete information when creating your account</li>
+                            <li>Update your information to keep it accurate and current</li>
+                            <li>Ensure your account is used only by you</li>
+                            <li>Notify us immediately of any unauthorized use of your account</li>
+                        </ul>
+
+                        <h3>4. User Content</h3>
+                        <p>You retain ownership of content you create and share through MDHub. By posting content, you grant us a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content in connection with the Service.</p>
+                        <p>You agree not to post content that:</p>
+                        <ul>
+                            <li>Violates intellectual property rights</li>
+                            <li>Is illegal, harmful, threatening, or discriminatory</li>
+                            <li>Contains malware or harmful code</li>
+                            <li>Impersonates another person or entity</li>
+                        </ul>
+
+                        <h3>5. Acceptable Use</h3>
+                        <p>When using MDHub, you agree not to:</p>
+                        <ul>
+                            <li>Use the service for any illegal purpose</li>
+                            <li>Interfere with the proper functioning of the service</li>
+                            <li>Attempt to gain unauthorized access to any part of the service</li>
+                            <li>Use automated scripts to collect information from the service</li>
+                            <li>Harass, threaten, or harm other users</li>
+                        </ul>
+
+                        <h3>6. Termination</h3>
+                        <p>We reserve the right to suspend or terminate your access to MDHub at our discretion, particularly if you violate these Terms of Service.</p>
+
+                        <h3>7. Changes to Terms</h3>
+                        <p>We may modify these Terms of Service at any time. We will provide notice of significant changes. Your continued use of MDHub after such modifications constitutes your acceptance of the updated terms.</p>
+
+                        <h3>8. Disclaimers and Limitations of Liability</h3>
+                        <p>MDHub is provided "as is" without warranties of any kind. We are not responsible for the content posted by users and do not guarantee the accuracy or quality of user-generated content.</p>
+                        <p>To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service.</p>
+
+                        <h3>9. Governing Law</h3>
+                        <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which we operate, without regard to its conflict of law provisions.</p>
+
+                        <h3>10. Contact Information</h3>
+                        <p>If you have any questions about these Terms, please contact us at abdelhakim.sahifa@yahoo.com</p>
+
+                        <p class="last-updated">Last Updated: March 17, 2025</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>MDHub © 2025</p>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="terms.html">Terms</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="https://github.com/abdelhakim-sahifa/MDHub" target="_blank">
+                    <span class="material-icons">code</span>
+                    Source
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal templates -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to MD File Sharing Hub</h2>
+                <button class="modal-close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button id="anon-login" class="btn btn-block">
+                    <span class="material-icons">person_outline</span>
+                    Continue Anonymously
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core JavaScript Files -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/theme.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Add section IDs and links
+    const sections = document.querySelectorAll('.terms-content h3, .privacy-content h3');
+    sections.forEach(function(section, index) {
+        const id = 'section-' + (index + 1);
+        section.id = id;
+        const link = document.createElement('a');
+        link.href = '#' + id;
+        link.className = 'section-link';
+        link.innerHTML = '#';
+        section.appendChild(link);
+    });
+    
+    // Create table of contents (optional)
+    const contentDiv = document.querySelector('.terms-content, .privacy-content');
+    if (contentDiv) {
+        const toc = document.createElement('div');
+        toc.className = 'legal-toc';
+        
+        const tocHeader = document.createElement('h4');
+        tocHeader.textContent = 'Table of Contents';
+        toc.appendChild(tocHeader);
+        
+        const tocList = document.createElement('ol');
+        sections.forEach(function(section, index) {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#section-' + (index + 1);
+            a.textContent = section.textContent.replace('#', '');
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+        
+        toc.appendChild(tocList);
+        contentDiv.prepend(toc);
+    }
+});
+    </script>
+</body>
+</html>
