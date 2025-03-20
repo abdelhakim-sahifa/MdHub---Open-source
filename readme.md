@@ -109,7 +109,7 @@ This project is open source and available under the [MIT License](License.md).
 
 ## Contact
 
-Project Link: [https://github.com/abdelhakim-sahifa/MDHub](https://github.com/abdelhakim-sahifa/MDHub)
+abdelhakim.sahifa@yahoo.com
 
 ## Acknowledgements
 
