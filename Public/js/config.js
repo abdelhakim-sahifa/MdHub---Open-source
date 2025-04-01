@@ -13,6 +13,7 @@ const firebaseConfig = {
     appId: process.env.FIREBASE_APP_ID,
     measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
+// Realtime Database rules are included in the `Readme.md` file
 
 // Gemini Configuration
 const geminiConfiguration = {

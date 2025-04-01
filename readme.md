@@ -123,6 +123,125 @@ MDHub/
 └── README.md               # Project documentation
 ```
 
+
+
+## Firebase Security Rules
+
+```json
+{
+  "rules": {
+    ".read": true,  // Allow public read access to the entire database
+      
+    "users": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId",
+        ".write": "auth != null && auth.uid === $userId"
+      }
+    },
+    
+    "feedback": {
+      ".write": true,
+      "$feedbackId": {
+        ".validate": "newData.hasChildren(['type', 'message', 'timestamp']) && 
+                     newData.child('type').isString() && 
+                     newData.child('message').isString() && 
+                     newData.child('timestamp').isNumber()"
+      }
+    },
+    
+    "mdfiles": {
+      ".read": true,
+      "$fileId": {
+        ".write": "(!data.exists() && auth != null) || 
+                  (data.exists() && auth != null && data.child('userId').val() === auth.uid)",
+        ".validate": "newData.hasChildren(['id', 'title', 'content', 'timestamp', 'userId']) && 
+                      newData.child('id').isString() && 
+                      newData.child('title').isString() && 
+                      newData.child('content').isString()",
+        
+        "views": {
+          ".write": true
+        },
+        "likes": {
+          ".write": "auth != null"
+        },
+        "stars": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    
+    "pending_mdfiles": {
+      ".read": "auth != null",  
+      "$fileId": {
+        ".write": "(!data.exists() && auth != null) || 
+                  (data.exists() && auth != null && data.child('userId').val() === auth.uid)",
+        ".validate": "newData.hasChildren(['id', 'title', 'content', 'timestamp', 'userId', 'status']) && 
+                      newData.child('id').isString() && 
+                      newData.child('title').isString() && 
+                      newData.child('content').isString() &&
+                      newData.child('status').isString()"
+      }
+    },
+    
+    "rejected_mdfiles": {
+      ".read": "auth != null",  
+      "$fileId": {
+        ".write": "auth != null && newData.child('userId').val() === auth.uid",
+        ".validate": "newData.hasChild('id') && newData.hasChild('status')"
+      }
+    },
+    
+    "file_comments": {
+      ".read": true,
+      "$fileId": {
+        "$commentId": {
+          ".write": "((!data.exists() && auth != null && 
+                     newData.hasChildren(['userId', 'content', 'timestamp']) &&
+                     newData.child('userId').val() === auth.uid) || 
+                    (data.exists() && auth != null && 
+                     data.child('userId').val() === auth.uid && 
+                     !newData.exists()))"
+        }
+      }
+    },
+    
+    "user_likes": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId",
+        ".write": "auth != null && auth.uid === $userId"
+      }
+    },
+    
+    "user_stars": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId",
+        ".write": "auth != null && auth.uid === $userId"
+      }
+    }
+  }
+}
+```
+
+*Note: These are not the actual rules we use and may not be fully secure. If you are a contributor from the open-source community and see areas for improvement, please provide your suggestions.*
+
+### Troubleshooting
+
+If these rules do not work as expected, use the following test rules to allow full access during debugging:
+
+```json
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+```
+
+Use these only for testing and remove them when deploying to production.
+
+
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
