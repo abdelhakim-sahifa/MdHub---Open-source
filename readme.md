@@ -3,6 +3,15 @@
 # ![MDHub Logo](https://fyqddomrlpkowgosopyt.supabase.co/storage/v1/object/public/test//graph_6_24dp_F85149_FILL0_wght400_GRAD0_opsz24.png ) MDHub - Markdown File Sharing Platform
 
 
+![Stars](https://img.shields.io/github/stars/abdelhakim-sahifa/MdHub---Open-source?style=social) ![Forks](https://img.shields.io/github/forks/abdelhakim-sahifa/MdHub---Open-source?style=social) ![Watchers](https://img.shields.io/github/watchers/abdelhakim-sahifa/MdHub---Open-source?style=social) 
+
+![Last Commit](https://img.shields.io/github/last-commit/abdelhakim-sahifa/MdHub---Open-source) 
+![Open Issues](https://img.shields.io/github/issues/abdelhakim-sahifa/MdHub---Open-source) ![Closed Issues](https://img.shields.io/github/issues-closed/abdelhakim-sahifa/MdHub---Open-source) ![Pull Requests](https://img.shields.io/github/issues-pr/abdelhakim-sahifa/MdHub---Open-source) ![Closed PRs](https://img.shields.io/github/issues-pr-closed/abdelhakim-sahifa/MdHub---Open-source) ![License](https://img.shields.io/github/license/abdelhakim-sahifa/MdHub---Open-source) ![Contributors](https://img.shields.io/github/contributors/abdelhakim-sahifa/MdHub---Open-source) ![Repo Size](https://img.shields.io/github/repo-size/abdelhakim-sahifa/MdHub---Open-source)
+
+
+Let me know if you want custom badges or any other details! 🚀
+
+
 MDHub is a web-based platform for creating, sharing, and discovering markdown files. It provides a clean, intuitive interface for writing markdown content and sharing it with others.
 
 ## Features
@@ -127,7 +136,7 @@ MDHub/
 
 ## Firebase Security Rules
 
-```json
+```JSON
 {
   "rules": {
     ".read": true,  // Allow public read access to the entire database
