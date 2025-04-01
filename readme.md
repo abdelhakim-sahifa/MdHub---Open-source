@@ -35,7 +35,7 @@ MDHub is a web-based platform for creating, sharing, and discovering markdown fi
 ### Installation
 1. Clone the repository:
    ```
-   git clone https://github.com/abdelhakim-sahifa/MDHub.git
+   git clone https://github.com/abdelhakim-sahifa/MdHub---Open-source.git
    ```
 2. Open `index.html` in your browser or deploy to a web server
 
