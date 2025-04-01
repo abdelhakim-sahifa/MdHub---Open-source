@@ -18,8 +18,16 @@ const firebaseConfig = {
 const geminiConfiguration = {
     API_KEY: process.env.GEMINI_API_KEY,
     BASE_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=",
-    TEST_KEY: process.env.GEMINI_TEST_KEY
+    TEST_KEY: process.env.GEMINI_TEST_KEY // This key is something I added myself for testing. 
+                                         //  so the AI knows I'm a developer 
+                                         // and follows the instructions.
+                                         // It doesn't come with the Gemini config by default.
+                                         // You can ignore it or set it to any value (e.g., 123 or "test"). 
+                                         // You can see its usage in `editor.js` at line 331.
+
+                                    
 };
+
 
 // Supabase Configuration
 const SUPABASE_URL = process.env.SUPABASE_URL;
