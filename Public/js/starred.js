@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tagElement.className = 'tag';
                 tagElement.textContent = tag.name;
                 tagElement.addEventListener('click', () => {
-                    window.location.href = `search.html?tag=${encodeURIComponent(tag.name)}`;
+                    window.location.href = `search.html?q=${encodeURIComponent(tag.name)}`;
                 });
                 tagsList.appendChild(tagElement);
             });

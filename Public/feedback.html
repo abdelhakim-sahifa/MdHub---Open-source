@@ -3,38 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starred Files | MDHub</title>
+    <title>Feedback - MDHub</title>
     <link rel="shortcut icon" href="https://fyqddomrlpkowgosopyt.supabase.co/storage/v1/object/public/test//graph_6_24dp_F85149_FILL0_wght400_GRAD0_opsz24.png" type="image/x-icon">
-    
+  
     <!-- CSS Files -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/markdown.css">
-    <link rel="stylesheet" href="css/my-files.css">
-    <link rel="stylesheet" href="css/starred.css">
-    
+    <link rel="stylesheet" href="css/feedback.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
     <!-- Font Awesome -->  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=graph_6" />
-    
-    <!-- Marked.js for rendering markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
     <header>
@@ -92,7 +81,7 @@
                             My Files
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="starred.html">
                             <span class="material-icons">star</span>
                             Starred
@@ -103,34 +92,101 @@
                     <h3>Popular Tags</h3>
                     <div class="tags-list" id="tags-list">
                         <!-- Tags will be populated here -->
-                        <span class="tag">javascript</span>
-                        <span class="tag">tutorial</span>
-                        <span class="tag">guide</span>
                     </div>
                 </div>
             </nav>
         </aside>
 
         <div class="content-container">
-            <section id="starred-section">
+            <section id="feedback-section">
                 <div class="section-header">
-                    <h2>Your Starred Files</h2>
-                    <div class="section-actions">
-                        <select id="sort-starred">
-                            <option value="recent">Recently Starred</option>
-                            <option value="alpha">Alphabetical</option>
-                            <option value="popular">Most Popular</option>
-                        </select>
+                    <h2><span class="material-icons">feedback</span> Feedback for MDHub Beta</h2>
+                </div>
+                
+                <div class="feedback-container">
+                    <div class="feedback-intro">
+                        <p>We're constantly working to improve MDHub. Your feedback is invaluable in helping us build a better platform for sharing and discovering markdown files.</p>
+                    </div>
+                    
+                    <div id="feedback-form-container">
+                        <form id="feedback-form">
+                            <div class="form-group">
+                                <label for="feedback-type">Feedback Type</label>
+                                <select id="feedback-type" required>
+                                    <option value="">Select feedback type</option>
+                                    <option value="bug">Bug Report</option>
+                                    <option value="feature">Feature Request</option>
+                                    <option value="improvement">Improvement Suggestion</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="feedback-title">Title</label>
+                                <input type="text" id="feedback-title" placeholder="Brief description of your feedback" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="feedback-message">Feedback Details</label>
+                                <textarea id="feedback-message" rows="6" placeholder="Please provide as much detail as possible..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="feedback-email">Your Email (optional)</label>
+                                <input type="email" id="feedback-email" placeholder="We'll only contact you for follow-up questions">
+                            </div>
+                            
+                            <div class="form-group rating-group">
+                                <label>Rate your overall experience with MDHub</label>
+                                <div class="rating-controls">
+                                    <div class="star-rating">
+                                        <span class="star" data-rating="1"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="2"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="3"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="4"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="5"><i class="far fa-star"></i></span>
+                                    </div>
+                                    <span id="rating-display">No rating</span>
+                                    <input type="hidden" id="rating-value" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" id="submit-feedback" class="btn btn-primary">
+                                    <span class="material-icons">send</span>
+                                    Submit Feedback
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="feedback-success" class="feedback-success" style="display: none;">
+                        <div class="success-icon">
+                            <span class="material-icons">check_circle</span>
+                        </div>
+                        <h3>Thank You for Your Feedback!</h3>
+                        <p>Your input helps us improve MDHub for everyone.</p>
+                        <button id="submit-another" class="btn btn-secondary">
+                            Submit Another
+                        </button>
                     </div>
                 </div>
-                <div id="starred-files" class="md-files-grid">
-                    <!-- Starred files will be populated here -->
-                    <div class="md-file-placeholder" id="login-placeholder">Login to view your starred files</div>
-                    <div class="md-file-placeholder hidden" id="loading-placeholder">Loading your starred files...</div>
-                    <div class="md-file-placeholder hidden" id="empty-placeholder">
-                        <span class="material-icons">star_border</span>
-                        <p>You haven't starred any files yet</p>
-                        <a href="explore.html" class="btn btn-secondary">Explore Files</a>
+                
+                <div class="feedback-additional">
+                    <h3>Other Ways to Provide Feedback</h3>
+                    <div class="contact-options">
+                        <div class="contact-option">
+                            <span class="material-icons">code</span>
+                            <h4>GitHub Issues</h4>
+                            <p>Contribute directly to our open source project</p>
+                            <a href="https://github.com/abdelhakim-sahifa/MdHub---Open-source/issues" target="_blank" class="btn btn-text">Open an Issue</a>
+                        </div>
+                        <div class="contact-option">
+                            <span class="material-icons">mail</span>
+                            <h4>Email Us</h4>
+                            <p>For private feedback or partnership inquiries</p>
+                            <a href="mailto:abdelhakim.sahifa@yahoo.com" class="btn btn-text">abdelhakim.sahifa@yahoo.com</a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -164,9 +220,8 @@
             </div>
 
             <div class="modal-body">
-                <p>Login to access your starred files and manage your collections.</p>
+                <p>Login to access your files and start sharing markdown files with the world.</p>
                 <p>Choose a login method below:</p>
-                
                 <button id="google-login" class="btn btn-block btn-google">
                     <i class="fa-brands fa-google"></i>
                     Login with Google
@@ -179,6 +234,6 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/theme.js"></script>
-    <script src="js/starred.js"></script>
+    <script src="js/feedback.js"></script>
 </body>
 </html>

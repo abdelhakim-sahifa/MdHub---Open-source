@@ -152,10 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
             allSearchResults = results;
             
             // Update result count
-            if (searchResultsCount) {
-                searchResultsCount.textContent = `${results.length} result${results.length !== 1 ? 's' : ''}`;
-            }
+            const publicResults = results.filter(file => file.visibility === "public");
+            allSearchResults = publicResults; // Store only public results
             
+            // Then update the count with the filtered results
+            if (searchResultsCount) {
+                searchResultsCount.textContent = `${publicResults.length} result${publicResults.length !== 1 ? 's' : ''}`;
+            }
             // Check if we have results
             if (results.length === 0) {
                 showNoResults();
@@ -238,6 +241,9 @@ function renderSearchResults(results) {
     searchResults.innerHTML = '';
     
     results.forEach(file => {
+        const isPublic = file.visibility === "public";
+         if (!isPublic) return;
+        
         const fileCard = document.createElement('div');
         fileCard.className = 'md-file-card';
         

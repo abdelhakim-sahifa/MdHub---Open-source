@@ -425,7 +425,10 @@
   }
   
   .file-tags {
-    margin: 16px 0;
+      margin: 16px 0;
+      gap: 5px;
+      display: flex;
+      flex-wrap: wrap;
   }
   
   .table-of-contents {
@@ -591,12 +594,12 @@
       border: 1px solid #ddd;
     }
     
-    .markdown-content table {
+    table {
       border-collapse: collapse;
     }
     
-    .markdown-content table th,
-    .markdown-content table td {
+    table th,
+  table td {
       border: 1px solid #ddd;
     }
     
@@ -628,5 +631,70 @@
     .markdown-content h3 {
       orphans: 3;
       widows: 3;
+    }
+  }
+/* Enhanced Table Styles */
+ table td {
+  padding: 8px 16px;
+  vertical-align: middle;
+  border: 1px solid #ded2d02e;
+  font-size: 14px;
+}
+
+ table tr {
+  transition: background-color 0.2s ease;
+}
+table th{
+  background-color: #f0f5ff;
+  color: #24292f;
+  padding: 5px;
+}
+ table tr:hover {
+  background-color: #f0f5ff;
+  color: #24292f;
+}
+
+table td.numeric {
+  text-align: right;
+  font-family: 'Fira Code', monospace;
+}
+
+ table td.centered {
+  text-align: center;
+}
+
+ table td.highlight {
+  background-color: #fffbd0;
+}
+
+/* Add some spacing and style for first and last cells in a row */
+ table td:first-child {
+  font-weight: 500;
+  
+}
+
+
+
+
+/* Responsive tables for mobile */
+@media (max-width: 768px) {
+   table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  table td, 
+  table th {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+  @media (max-width: 768px) {
+    .file-actions{
+     
+      flex-direction: column;
+      gap: 8px;
+     
     }
   }

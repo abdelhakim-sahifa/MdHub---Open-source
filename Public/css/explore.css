@@ -2,7 +2,7 @@
 
 /* Hero Section Enhancements */
 #explore-hero {
-    background: linear-gradient(135deg, var(--primary-color-light), var(--primary-color));
+    background: linear-gradient(135deg, #ff9800, var(--primary-color));
     padding: 3rem 2rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -203,8 +203,10 @@
 }
 
 .md-file-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-color: #ff9800 !important;
+    transform: translateY(0) !important;
+  
+
 }
 
 .md-file-card .file-title {
@@ -219,7 +221,7 @@
     margin-bottom: 1rem;
     line-height: 1.5;
     flex-grow: 1;
-    max-height: 5em;
+    max-height: 1em;
     overflow: hidden;
     position: relative;
 }
@@ -379,6 +381,7 @@
     .explore-search input {
         border-radius: 8px;
         margin-bottom: 10px;
+        padding: 0.5rem;
     }
     
     .explore-search button {
@@ -407,6 +410,20 @@
         align-items: flex-start;
         gap: 10px;
     }
+}
+
+.featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff9800;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 
 /* Dark theme specific adjustments */

@@ -3,20 +3,633 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Embedded Markdown Content</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="shortcut icon" href="https://fyqddomrlpkowgosopyt.supabase.co/storage/v1/object/public/test//graph_6_24dp_F85149_FILL0_wght400_GRAD0_opsz24.png" type="image/x-icon">
+   
+<style>
+    /* Theme Variables */
+:root {  
+    /* Status Colors - common for both themes */
+    --success-color: #2ea043;
+    --success-bg: rgba(46, 160, 67, 0.15);
+    --warning-color: #d29922;
+    --warning-bg: rgba(210, 153, 34, 0.15);
+    --danger-color: #f85149;
+    --danger-bg: rgba(248, 81, 73, 0.15);
+    --info-color: #58a6ff;
+    --info-bg: rgba(88, 166, 255, 0.15);
+}
+
+/* Light Theme (default) */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --bg-tertiary: #ebedef;
+    --border: #d0d7de;
+    --text-primary: #24292f;
+    --text-secondary: #57606a;
+    --text-tertiary: #6e7781;
+    --link: #0969da;
+    --link-hover: #0550ae;
+    --icon: #57606a;
+    --primary-btn: transparent;
+    --primary-btn-hover: #f6f8fa;
+    --secondary-btn: #f6f8fa;
+    --secondary-btn-hover: #ebedef;
+    --danger-btn: transparent;
+    --danger-btn-hover: #f6f8fa;
+    --syntax-bg: #f6f8fa;
+    --scrollbar-track: #f6f8fa;
+    --scrollbar-thumb: #d0d7de;
+    --scrollbar-thumb-hover: #6e7781;
+    --modal-overlay: rgba(240, 240, 240, 0.8);
+    --code-highlight: rgba(0, 0, 0, 0.05);
+    --tag-bg: #f6f8fa;
+    --hover-item: #f6f8fa;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme */
+html[data-theme="dark"] {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --border: #30363d;
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --text-tertiary: #6e7681;
+    --link: #58a6ff;
+    --link-hover: #79c0ff;
+    --icon: #8b949e;
+    --primary-btn: transparent;
+    --primary-btn-hover: #21262d;
+    --secondary-btn: #21262d;
+    --secondary-btn-hover: #30363d;
+    --danger-btn: transparent;
+    --danger-btn-hover: #21262d;
+    --syntax-bg: #161b22;
+    --scrollbar-track: #0d1117;
+    --scrollbar-thumb: #30363d;
+    --scrollbar-thumb-hover: #6e7681;
+    --modal-overlay: rgba(1, 4, 9, 0.8);
+    --code-highlight: rgba(255, 255, 255, 0.05);
+    --tag-bg: #21262d;
+    --hover-item: #161b22;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Base styling for embedded content */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 15px;
+    background-color: var(--bg-primary);
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Content container */
+.content {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 2em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+
+h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+
+h3 { font-size: 1.25em; }
+h4 { font-size: 1em; }
+h5 { font-size: 0.875em; }
+h6 { font-size: 0.85em; color: var(--text-secondary); }
+
+/* First heading should have less top margin */
+.content > h1:first-child,
+.content > h2:first-child,
+.content > h3:first-child {
+    margin-top: 0;
+}
+
+/* Paragraphs */
+p {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+/* Links */
+a {
+    color: var(--link);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* Lists */
+ul, ol {
+    padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+li {
+    margin-bottom: 0.25em;
+}
+
+/* Nested lists */
+li > ul, li > ol {
+    margin-top: 0.25em;
+    margin-bottom: 0;  
+}
+
+/* Blockquotes */
+blockquote {
+    padding: 0 1em;
+    color: var(--text-secondary);
+    border-left: 0.25em solid var(--border);
+    margin: 0 0 16px 0;
+}
+
+blockquote > :first-child {
+    margin-top: 0;
+}
+
+blockquote > :last-child {
+    margin-bottom: 0;
+}
+
+/* Code */
+code {
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 85%;
+    padding: 0.2em 0.4em;
+    margin: 0;
+    background-color: var(--code-highlight);
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+pre {
+    margin-bottom: 16px;
+    padding: 16px;
+    overflow: auto;
+    line-height: 1.45;
+    background-color: var(--syntax-bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+pre code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    background-color: transparent;
+    border: 0;
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 0 16px 0;
+    display: block;
+    overflow-x: auto;
+}
+
+table tr {
+    background-color: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    transition: background-color 0.3s ease;
+}
+
+table tr:nth-child(2n) {
+    background-color: var(--bg-secondary);
+}
+
+table th, table td {
+    padding: 6px 13px;
+    border: 1px solid var(--border);
+}
+
+table th {
+    font-weight: 600;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    margin: 0 0 16px 0;
+    border-radius: 6px;
+}
+
+/* Horizontal rule */
+hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: var(--border);
+    border: 0;
+    transition: background-color 0.3s ease;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Syntax highlighting for code blocks - adaptive to theme */
+.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    color: var(--text-primary);
+    background: var(--syntax-bg);
+}
+
+/* Light theme syntax highlighting */
+:root .hljs-keyword,
+:root .hljs-selector-tag,
+:root .hljs-subst {
+    color: #d73a49;
+    font-weight: bold;
+}
+
+:root .hljs-string,
+:root .hljs-doctag {
+    color: #032f62;
+}
+
+:root .hljs-title,
+:root .hljs-section,
+:root .hljs-selector-id {
+    color: #6f42c1;
+}
+
+:root .hljs-comment,
+:root .hljs-quote {
+    color: var(--text-tertiary);
+}
+
+:root .hljs-meta {
+    color: #0550ae;
+}
+
+:root .hljs-attr,
+:root .hljs-name {
+    color: #22863a;
+}
+
+:root .hljs-number,
+:root .hljs-literal {
+    color: #e36209;
+}
+
+/* Dark theme syntax highlighting */
+html[data-theme="dark"] .hljs-keyword,
+html[data-theme="dark"] .hljs-selector-tag,
+html[data-theme="dark"] .hljs-subst {
+    color: #ff7b72;
+    font-weight: bold;
+}
+
+html[data-theme="dark"] .hljs-string,
+html[data-theme="dark"] .hljs-doctag {
+    color: #a5d6ff;
+}
+
+html[data-theme="dark"] .hljs-title,
+html[data-theme="dark"] .hljs-section,
+html[data-theme="dark"] .hljs-selector-id {
+    color: #d2a8ff;
+}
+
+html[data-theme="dark"] .hljs-comment,
+html[data-theme="dark"] .hljs-quote {
+    color: var(--text-tertiary);
+}
+
+html[data-theme="dark"] .hljs-meta {
+    color: #79c0ff;
+}
+
+html[data-theme="dark"] .hljs-attr,
+html[data-theme="dark"] .hljs-name {
+    color: #7ee787;
+}
+
+html[data-theme="dark"] .hljs-number,
+html[data-theme="dark"] .hljs-literal {
+    color: #f2cc60;
+}
+
+/* Callouts and special styles */
+.note, .info, .warning, .danger {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    border-left: 4px solid;
+    transition: background-color 0.3s ease;
+}
+
+.note {
+    background-color: rgba(88, 166, 255, 0.1);
+    border-left-color: var(--info-color);
+}
+
+.info {
+    background-color: rgba(88, 166, 255, 0.1);
+    border-left-color: var(--info-color);
+}
+
+.warning {
+    background-color: rgba(210, 153, 34, 0.1);
+    border-left-color: var(--warning-color);
+}
+
+.danger {
+    background-color: rgba(248, 81, 73, 0.1);
+    border-left-color: var(--danger-color);
+}
+
+/* Keyboard keys */
+kbd {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    box-shadow: inset 0 -1px 0 var(--border);
+    color: var(--text-primary);
+    display: inline-block;
+    font-size: 85%;
+    line-height: 1;
+    padding: 3px 5px;
+    vertical-align: middle;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Loading indicator */
+.loading {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Error message */
+.error {
+    padding: 16px;
+    margin: 16px 0;
+    background-color: var(--danger-bg);
+    border-left: 4px solid var(--danger-color);
+    color: var(--text-primary);
+    border-radius: 6px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    h2 {
+        font-size: 1.4em;
+    }
+    
+    pre {
+        padding: 10px;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        color: #000;
+        background: #fff;
+    }
+    
+    a, a:visited {
+        color: #0969da;
+        text-decoration: underline;
+    }
+    
+    pre, blockquote {
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+        background: #f6f8fa !important;
+        color: #24292f !important;
+    }
+    
+    code {
+        background-color: #f6f8fa !important;
+        color: #24292f !important;
+    }
+    
+    thead {
+        display: table-header-group;
+    }
+    
+    tr, img {
+        page-break-inside: avoid;
+    }
+    
+    p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+    }
+    
+    h2, h3 {
+        page-break-after: avoid;
+    }
+    
+    table tr {
+        background-color: #fff !important;
+    }
+    
+    table tr:nth-child(2n) {
+        background-color: #f6f8fa !important;
+    }
+}
+</style>
 </head>
 <body>
     <div class="content" id="content-container">
         
     </div>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/theme.js"></script>
+   <script>
+    // Get content from database using the ID parameter
+document.addEventListener('DOMContentLoaded', () => {
+    const contentContainer = document.getElementById("content-container");
+    const loadingIndicator = document.createElement("div");
+    loadingIndicator.className = "loading";
+    loadingIndicator.textContent = "Loading...";
+    contentContainer.appendChild(loadingIndicator);
 
-    <script>
-        // Get content from localStorage
-        const content = localStorage.getItem("mdContent");
-        if (content) {
-        document.getElementById("content-container").innerHTML = content;
+    // Get file ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const fileId = urlParams.get('id');
+    
+    if (!fileId) {
+        contentContainer.innerHTML = '<div class="error">No file ID provided</div>';
+        return;
+    }
+
+    // Initialize Firebase (make sure these Firebase scripts are included in your HTML)
+    // Note: This assumes Firebase is already initialized in your app
+    
+    // Fetch the file content from Firebase
+    firebase.database().ref(`mdfiles/${fileId}`).once('value')
+        .then(snapshot => {
+            const file = snapshot.val();
+            
+            if (!file) {
+                contentContainer.innerHTML = '<div class="error">File not found</div>';
+                return;
+            }
+            
+            // Render the markdown content with math support
+            renderMarkdownContent(file.content, contentContainer);
+            
+            // Set the document title from the file title
+            document.title = file.title || "Embedded Markdown Content";
+            
+            // Make external links open in new tab
+            document.querySelectorAll('a').forEach(link => {
+                if (link.hostname !== window.location.hostname) {
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                }
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching file:", error);
+            contentContainer.innerHTML = `<div class="error">Error loading content: ${error.message}</div>`;
+        });
+});
+
+// Render markdown content
+function renderMarkdownContent(content, container) {
+    if (!content || !container) return;
+    
+    try {
+        // Use marked.js to render markdown
+        container.innerHTML = marked.parse(content);
+        
+        // Add syntax highlighting if available
+        if (window.hljs) {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
         }
+        
+        // Process math expressions if MathJax is available
+        if (window.MathJax) {
+            MathJax.typeset();
+        } else {
+            // Dynamically load MathJax if not already available
+            loadMathJax();
+        }
+    } catch (error) {
+        console.error('Error rendering markdown:', error);
+        container.innerHTML = `<p>Error rendering markdown: ${error.message}</p>`;
+    }
+}
 
-    </script>
+// Helper function to load MathJax
+function loadMathJax() {
+    // Create script element for MathJax
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+    script.async = true;
+    
+    // Configure MathJax before loading
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
+        },
+        svg: {
+            fontCache: 'global'
+        },
+        options: {
+            renderActions: {
+                addMenu: []
+            }
+        },
+        startup: {
+            pageReady: () => {
+                MathJax.typeset();
+            }
+        }
+    };
+    
+    // Add the script to the document
+    document.head.appendChild(script);
+    
+    // Add event listener to reprocess math when script is loaded
+    script.onload = function() {
+        if (window.MathJax) {
+            MathJax.typeset();
+        }
+    };
+}
+   
+   </script>
+
+   
+
+   
 </body>
 </html>

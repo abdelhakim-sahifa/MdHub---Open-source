@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Handle tag click
                 tagElement.addEventListener('click', () => {
-                    window.location.href = `search.html?tag=${encodeURIComponent(tag)}`;
+                    window.location.href = `search.html?q=${encodeURIComponent(tag)}`;
                 });
                 
                 tagsListContainer.appendChild(tagElement);
@@ -195,111 +195,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load featured files
-    async function loadFeaturedFiles() {
-        if (!featuredCarousel) return;
+    // Load featured files with consistent UI
+async function loadFeaturedFiles() {
+    if (!featuredCarousel) return;
+    
+    try {
+        // Get featured files from Firebase
+        const snapshot = await database.ref('mdfiles')
+            .orderByChild('featured')
+            .equalTo(true)
+            .once('value');
         
-        try {
-            // Get featured files from Firebase
-            const snapshot = await database.ref('mdfiles')
-                .orderByChild('featured')
-                .equalTo(true)
-                .once('value');
-            
-            const featuredFiles = snapshot.val();
-            
-            if (!featuredFiles) {
-                featuredCarousel.innerHTML = '<div class="md-file-placeholder">No featured files</div>';
-                return;
-            }
-            
-            // Convert to array and sort by timestamp (newest first)
-            const featuredFilesArray = Object.entries(featuredFiles)
-                .map(([id, file]) => ({ id, ...file }))
-                .sort((a, b) => b.timestamp - a.timestamp);
-            
-            // Render featured files
-            featuredCarousel.innerHTML = '';
-            
-            featuredFilesArray.forEach(file => {
-                const fileCard = document.createElement('div');
-                fileCard.className = 'featured-card';
+        const featuredFiles = snapshot.val();
+        
+        if (!featuredFiles) {
+            featuredCarousel.innerHTML = '<div class="md-file-placeholder">No featured files</div>';
+            return;
+        }
+        
+        // Convert to array and sort by timestamp (newest first)
+        const featuredFilesArray = Object.entries(featuredFiles)
+            .map(([id, file]) => ({ id, ...file }))
+            .sort((a, b) => b.timestamp - a.timestamp);
+        
+        // Render featured files with same UI as regular files
+        featuredCarousel.innerHTML = '';
+        
+        featuredFilesArray.forEach(file => {
+            // Only render public files
+            if (file.visibility === "public") {
+                // Use the same function that creates regular file cards
+                const fileCard = createFileCard(file);
                 
-                // Calculate relative time
-                const date = new Date(file.timestamp);
-                const relativeTime = getRelativeTime(date);
-                
-                // Get first 120 characters of content as preview
-                const contentPreview = file.content 
-                    ? file.content.substring(0, 120) + (file.content.length > 120 ? '...' : '')
-                    : 'No preview available';
-                
-                // Determine author display
-                let authorDisplay = determineAuthorDisplay(file);
-                
-                // Create card content
-                fileCard.innerHTML = `
-                    <div class="featured-card-content">
-                        <h3 class="file-title">${file.title}</h3>
-                        <div class="file-preview">${contentPreview}</div>
-                        <div class="file-meta">
-                            <div class="file-author">${authorDisplay}</div>
-                            <div class="file-date">
-                                <span class="material-icons">access_time</span>
-                                ${relativeTime}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Add tags if available
-                if (file.tags) {
-                    const tagsContainer = document.createElement('div');
-                    tagsContainer.className = 'file-tags';
-                    
-                    const tags = Array.isArray(file.tags) 
-                        ? file.tags 
-                        : file.tags.split(',').map(tag => tag.trim());
-                    
-                    tags.slice(0, 3).forEach(tag => {
-                        if (!tag) return;
-                        
-                        const tagElement = document.createElement('span');
-                        tagElement.className = 'tag';
-                        tagElement.textContent = tag;
-                        
-                        // Handle tag click within card
-                        tagElement.addEventListener('click', (e) => {
-                            e.stopPropagation(); // Prevent card click
-                            window.location.href = `search.html?tag=${encodeURIComponent(tag)}`;
-                        });
-                        
-                        tagsContainer.appendChild(tagElement);
-                    });
-                    
-                    // Show count if more tags
-                    if (tags.length > 3) {
-                        const moreTagsElement = document.createElement('span');
-                        moreTagsElement.className = 'tag more-tags';
-                        moreTagsElement.textContent = `+${tags.length - 3} more`;
-                        tagsContainer.appendChild(moreTagsElement);
-                    }
-                    
-                    fileCard.querySelector('.featured-card-content').appendChild(tagsContainer);
-                }
-                
-                // Handle click to view file
-                fileCard.addEventListener('click', () => {
-                    window.location.href = `view-file.html?id=${file.id}`;
-                });
+                // Add featured indicator if you want to still distinguish them
+                const featuredBadge = document.createElement('div');
+                featuredBadge.className = 'featured-badge';
+                featuredBadge.innerHTML = '<span class="material-icons">star</span>';
+                fileCard.appendChild(featuredBadge);
                 
                 featuredCarousel.appendChild(fileCard);
-            });
-            
-        } catch (error) {
-            console.error('Error loading featured files:', error);
-            featuredCarousel.innerHTML = '<div class="md-file-placeholder">Error loading featured files</div>';
-        }
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error loading featured files:', error);
+        featuredCarousel.innerHTML = '<div class="md-file-placeholder">Error loading featured files</div>';
     }
+}
 
     // Load all files
     async function loadAllFiles() {
@@ -444,9 +386,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     filterDescription += ` from ${timeLabels[currentTimeFilter]}`;
                 }
                 
-                resultsCount.textContent = `Found ${results.length} file${results.length !== 1 ? 's' : ''}${filterDescription}`;
+                const publicResults = results.filter(file => file.visibility === "public");
+                
+                resultsCount.textContent = `Found ${publicResults.length} file${publicResults.length !== 1 ? 's' : ''}${filterDescription}`;
             } else {
-                resultsCount.textContent = `Showing all ${results.length} files`;
+                const publicResults = results.filter(file => file.visibility === "public");
+             
+                resultsCount.textContent = `Showing all ${publicResults.length} files`;
             }
         }
         
@@ -487,14 +433,18 @@ document.addEventListener('DOMContentLoaded', () => {
         exploreFilesContainer.innerHTML = '';
         
         pageResults.forEach(file => {
-            const fileCard = createFileCard(file);
-            exploreFilesContainer.appendChild(fileCard);
+            if(file.visibility === "public") {
+             const fileCard = createFileCard(file);
+            exploreFilesContainer.appendChild(fileCard);   
+            }
+            
         });
     }
 
-    // Create a file card element
+  
     // Create a file card element
 function createFileCard(file) {
+   
     const fileCard = document.createElement('div');
     fileCard.className = 'md-file-card';
     
@@ -604,7 +554,7 @@ function createFileCard(file) {
             // Handle tag click
             tagElement.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent card click
-                window.location.href = `search.html?tag=${encodeURIComponent(tag)}`;
+                window.location.href = `search.html?q=${encodeURIComponent(tag)}`;
             });
             
             tagsContainer.appendChild(tagElement);

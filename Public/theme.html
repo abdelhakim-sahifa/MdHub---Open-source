@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Settings - MDHub</title>
+    <meta name="description" content="Customize your MDHub experience with theme settings. Choose between light and dark mode, adjust colors, and set your preferences.">
+    <meta name="keywords" content="markdown, MDHub, theme settings, dark mode, light mode, customization">
+    <link rel="shortcut icon" href="https://fyqddomrlpkowgosopyt.supabase.co/storage/v1/object/public/test//graph_6_24dp_F85149_FILL0_wght400_GRAD0_opsz24.png" type="image/x-icon">
+    <link rel="shortcut icon" href="https://fyqddomrlpkowgosopyt.supabase.co/storage/v1/object/public/test//graph_6_24dp_F85149_FILL0_wght400_GRAD0_opsz24.png" type="image/x-icon">
+  
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/markdown.css">
+    <link rel="stylesheet" href="css/feedback.css">
+    <style>
+        .theme-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .theme-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+        
+        .theme-option:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .theme-option.active {
+            border: 2px solid var(--primary-color);
+        }
+        
+        .color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .animation-toggle {
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=graph_6" />
+    <!-- Marked.js for rendering markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-container">
+                <span class="material-symbols-outlined">graph_6</span>
+                <h1>MDHub</h1>
+            </div>
+            <div class="header-actions">
+                <div class="search-container">
+                    <span class="material-icons">search</span>
+                    <input type="text" id="search-input" placeholder="Search markdown files...">
+                </div>
+                <button id="new-file-btn" class="btn btn-primary">
+                    <span class="material-icons">add</span>
+                    New File
+                </button>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <span class="material-icons">dark_mode</span>
+                </button>
+                <div id="auth-container">
+                    <button id="login-btn" class="btn btn-secondary">
+                        <span class="material-icons">login</span>
+                        Login
+                    </button>
+                    <span id="user-status" class="user-status">Not logged in</span>
+                    <button id="logout-btn" class="btn btn-danger" style="display: none;">
+                        <span class="material-icons">logout</span>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        <a href="index.html">
+                            <span class="material-icons">home</span>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="explore.html">
+                            <span class="material-icons">explore</span>
+                            Explore
+                        </a>
+                    </li>
+                    <li>
+                        <a href="my-files.html">
+                            <span class="material-icons">folder</span>
+                            My Files
+                        </a>
+                    </li>
+                    <li>
+                        <a href="starred.html">
+                            <span class="material-icons">star</span>
+                            Starred
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="theme.html">
+                            <span class="material-icons">palette</span>
+                            Theme
+                        </a>
+                    </li>
+                    <li>
+                        <a href="donation-page.html">
+                            <span class="material-icons">volunteer_activism</span>
+                            Support Us
+                        </a>
+                    </li>
+                </ul>
+                <div class="sidebar-tags">
+                    <h3>Popular Tags</h3>
+                    <div class="tags-list" id="tags-list">
+                        <!-- Tags will be populated here -->
+                        <span class="tag">javascript</span>
+                        <span class="tag">tutorial</span>
+                        <span class="tag">guide</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="content-container">
+            <section>
+                <div class="section-header">
+                    <h2>Theme Settings</h2>
+                    <div class="section-actions">
+                        <button id="reset-defaults-btn" class="btn btn-secondary">
+                            <span class="material-icons">restart_alt</span>
+                            Reset to Defaults
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="settings-grid">
+                    <div class="theme-card">
+                        <h3>Color Mode</h3>
+                        <p>Choose between light and dark mode for the MDHub interface.</p>
+                        
+                        <div class="theme-option" id="dark-mode-option">
+                            <span class="material-icons">dark_mode</span>
+                            <div class="option-details">
+                                <h4>Dark Mode</h4>
+                                <p>Easier on the eyes in low-light environments</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="light-mode-option">
+                            <span class="material-icons">light_mode</span>
+                            <div class="option-details">
+                                <h4>Light Mode</h4>
+                                <p>Better visibility in bright environments</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="system-mode-option">
+                            <span class="material-icons">devices</span>
+                            <div class="option-details">
+                                <h4>System Default</h4>
+                                <p>Follow your system's theme setting</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="theme-card">
+                        <h3>Accent Color</h3>
+                        <p>Choose a color theme for buttons and interactive elements.</p>
+                        
+                        <div class="theme-option active" id="color-default">
+                            <div class="color-swatch" style="background-color: #F85149;"></div>
+                            <div class="option-details">
+                                <h4>Default Red</h4>
+                                <p>MDHub's signature color</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="color-blue">
+                            <div class="color-swatch" style="background-color: #3897f0;"></div>
+                            <div class="option-details">
+                                <h4>Blue</h4>
+                                <p>Clean and professional</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="color-green">
+                            <div class="color-swatch" style="background-color: #2ecc71;"></div>
+                            <div class="option-details">
+                                <h4>Green</h4>
+                                <p>Calm and focused</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="color-purple">
+                            <div class="color-swatch" style="background-color: #9b59b6;"></div>
+                            <div class="option-details">
+                                <h4>Purple</h4>
+                                <p>Creative and innovative</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="theme-card">
+                        <h3>Animation Settings</h3>
+                        <p>Customize the animation behavior on MDHub.</p>
+                        
+                        <div class="animation-toggle">
+                            <label class="switch">
+                                <input type="checkbox" id="advanced-animation-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                            <span id="animation-status">Advanced Animation is disabled</span>
+                        </div>
+                        
+                        <p class="setting-description">Advanced animations provide smoother transitions and effects but may impact performance on some devices.</p>
+                    </div>
+                    
+                    <div class="theme-card">
+                        <h3>Font Settings</h3>
+                        <p>Choose your preferred font for the editor and content display.</p>
+                        
+                        <div class="theme-option active" id="font-inter">
+                            <span class="material-icons">text_format</span>
+                            <div class="option-details">
+                                <h4>Inter (Default)</h4>
+                                <p>Clean and modern sans-serif font</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="font-system">
+                            <span class="material-icons">laptop</span>
+                            <div class="option-details">
+                                <h4>System Font</h4>
+                                <p>Uses your system's default font</p>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-option" id="font-monospace">
+                            <span class="material-icons">code</span>
+                            <div class="option-details">
+                                <h4>Monospace</h4>
+                                <p>Fixed-width font, ideal for code</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>MDHub © 2025</p>
+            <div class="footer-links">
+                <a href="about.html">
+                    <i class="fas fa-info-circle"></i>
+                    About
+                </a>
+                <a href="terms.html">
+                    <i class="fas fa-file-contract"></i>
+                    Terms
+                </a>
+                <a href="privacy.html">
+                    <i class="fas fa-user-shield"></i>
+                    Privacy
+                </a>
+                <a href="feedback.html">
+                    <i class="fas fa-comment-dots"></i>
+                    Feedback
+                </a>
+                <a href="https://www.reddit.com/r/MDHub/">
+                    <i class="fab fa-reddit"></i>
+                    Reddit Community
+                </a>
+                <a href="https://github.com/abdelhakim-sahifa/MdHub---Open-source" target="_blank">
+                    <i class="fas fa-code"></i>
+                    Source
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal templates -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to MDHub</h2>
+                <button class="modal-close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>Login to access your files and start sharing markdown files with the world.</p>
+                <p>Choose a login method below:</p>
+                
+                <button id="google-login" class="btn btn-block btn-google">
+                    <i class="fa-brands fa-google"></i>
+                    Login with Google
+                </button>
+
+                <button id="github-login" class="btn btn-block btn-github">
+                    <i class="fa-brands fa-github"></i>
+                    Login with GitHub
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core JavaScript Files -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        // Theme.js functionality specific to this page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check the current theme and update the UI accordingly
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            const animationEnabled = localStorage.getItem('advancedAnimation') === 'true';
+            
+            // Update animation toggle
+            const animationToggle = document.getElementById('advanced-animation-toggle');
+            const animationStatus = document.getElementById('animation-status');
+            
+            animationToggle.checked = animationEnabled;
+            animationStatus.textContent = animationEnabled ? 'Advanced Animation is enabled' : 'Advanced Animation is disabled';
+            animationStatus.style.color = animationEnabled ? 'var(--success-color)' : 'var(--danger-color)';
+            
+            // Set active theme option
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            if (currentTheme === 'dark') {
+                document.getElementById('dark-mode-option').classList.add('active');
+            } else if (currentTheme === 'light') {
+                document.getElementById('light-mode-option').classList.add('active');
+            } else {
+                document.getElementById('system-mode-option').classList.add('active');
+            }
+            
+            // Theme option click handlers
+            document.getElementById('dark-mode-option').addEventListener('click', function() {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                updateActiveOption(this);
+            });
+            
+            document.getElementById('light-mode-option').addEventListener('click', function() {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                updateActiveOption(this);
+            });
+            
+            document.getElementById('system-mode-option').addEventListener('click', function() {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+                localStorage.setItem('theme', 'system');
+                updateActiveOption(this);
+            });
+            
+            // Animation toggle handler
+            animationToggle.addEventListener('change', function() {
+                const isEnabled = this.checked;
+                localStorage.setItem('advancedAnimation', isEnabled.toString());
+                animationStatus.textContent = isEnabled ? 'Advanced Animation is enabled' : 'Advanced Animation is disabled';
+                animationStatus.style.color = isEnabled ? 'var(--success-color)' : 'var(--danger-color)';
+            });
+            
+            // Font option handlers
+            document.querySelectorAll('[id^="font-"]').forEach(element => {
+                element.addEventListener('click', function() {
+                    const fontType = this.id.replace('font-', '');
+                    localStorage.setItem('fontPreference', fontType);
+                    updateActiveOption(this);
+                    updateFontFamily(fontType);
+                });
+            });
+            
+            // Color option handlers
+            document.querySelectorAll('[id^="color-"]').forEach(element => {
+                element.addEventListener('click', function() {
+                    const colorType = this.id.replace('color-', '');
+                    localStorage.setItem('accentColor', colorType);
+                    updateActiveOption(this);
+                    updateAccentColor(colorType);
+                });
+            });
+            
+            // Reset to defaults button
+            document.getElementById('reset-defaults-btn').addEventListener('click', function() {
+                localStorage.setItem('theme', 'dark');
+                localStorage.setItem('advancedAnimation', 'false');
+                localStorage.setItem('fontPreference', 'inter');
+                localStorage.setItem('accentColor', 'default');
+                
+                // Reload the page to apply all default settings
+                location.reload();
+            });
+            
+            // Helper functions
+            function updateActiveOption(element) {
+                // Remove active class from siblings
+                const siblings = element.parentElement.querySelectorAll('.theme-option');
+                siblings.forEach(sibling => {
+                    sibling.classList.remove('active');
+                });
+                
+                // Add active class to clicked element
+                element.classList.add('active');
+            }
+            
+            function updateFontFamily(fontType) {
+                let fontFamily;
+                switch(fontType) {
+                    case 'inter':
+                        fontFamily = 'Inter, sans-serif';
+                        break;
+                    case 'system':
+                        fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                        break;
+                    case 'monospace':
+                        fontFamily = '"Fira Code", monospace';
+                        break;
+                    default:
+                        fontFamily = 'Inter, sans-serif';
+                }
+                
+                document.documentElement.style.setProperty('--font-family', fontFamily);
+            }
+            
+            function updateAccentColor(colorType) {
+                let color;
+                switch(colorType) {
+                    case 'default':
+                        color = '#F85149';
+                        break;
+                    case 'blue':
+                        color = '#3897f0';
+                        break;
+                    case 'green':
+                        color = '#2ecc71';
+                        break;
+                    case 'purple':
+                        color = '#9b59b6';
+                        break;
+                    default:
+                        color = '#F85149';
+                }
+                
+                document.documentElement.style.setProperty('--primary-color', color);
+            }
+        });
+    </script>
+</body>
+</html>

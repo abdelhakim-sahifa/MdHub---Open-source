@@ -29,6 +29,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let allUserFiles = [];
     let fileToDelete = null;
     
+    // Add status filter buttons
+    const statusFilterContainer = document.createElement('div');
+    statusFilterContainer.className = 'filter-container';
+    statusFilterContainer.innerHTML = `
+        <span class="filter-label">Status:</span>
+        <button class="status-filter-btn active" data-status="all">All</button>
+        <button class="status-filter-btn" data-status="approved">Approved</button>
+        <button class="status-filter-btn" data-status="pending">Pending</button>
+        <button class="status-filter-btn" data-status="rejected">Rejected</button>
+    `;
+    
+    // Insert status filter after the existing filter buttons
+    const existingFilterContainer = filterButtons[0].parentElement;
+    existingFilterContainer.parentNode.insertBefore(statusFilterContainer, existingFilterContainer.nextSibling);
+    
+    // Get the new status filter buttons
+    const statusFilterButtons = document.querySelectorAll('.status-filter-btn');
+    
+    // Current status filter
+    let currentStatusFilter = 'all';
+    
     // Event listeners
     if (newFileBtn) {
         newFileBtn.addEventListener('click', () => {
@@ -81,6 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
+    // Status filter buttons
+    statusFilterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Update active state
+            statusFilterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Apply status filter
+            currentStatusFilter = button.getAttribute('data-status');
+            currentPage = 1;
+            renderFiles();
+        });
+    });
+    
     // Pagination handlers
     if (prevPageBtn) {
         prevPageBtn.addEventListener('click', () => {
@@ -126,36 +161,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Check authentication status
-function checkAuthStatus() {
-    // Check if Firebase auth is available and fully initialized
-    if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth()) {
-       // console.log('Firebase auth is ready');
-        
-        // Set up the auth state listener (only need to do this once)
-        firebase.auth().onAuthStateChanged(function(user) {
-         //   console.log('Auth state changed. User:', user);
-            
-            if (user) {
-                // User is signed in
-           //     console.log('User is authenticated:', user.uid);
-                if (authAlert) authAlert.classList.add('hidden');
-                loadUserFiles();
-            } else {
-                // No user is signed in
-          //      console.log('No user is authenticated');
-                if (authAlert) authAlert.classList.remove('hidden');
-                if (myFilesContainer) {
-                    myFilesContainer.innerHTML = '<div class="md-file-placeholder">Login to view your files</div>';
+    function checkAuthStatus() {
+        // Check if Firebase auth is available and fully initialized
+        if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth()) {
+            // Set up the auth state listener (only need to do this once)
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // User is signed in
+                    if (authAlert) authAlert.classList.add('hidden');
+                    loadUserFiles();
+                } else {
+                    // No user is signed in
+                    if (authAlert) authAlert.classList.remove('hidden');
+                    if (myFilesContainer) {
+                        myFilesContainer.innerHTML = '<div class="md-file-placeholder">Login to view your files</div>';
+                    }
+                    if (emptyState) emptyState.classList.add('hidden');
                 }
-                if (emptyState) emptyState.classList.add('hidden');
-            }
-        });
-    } else {
-        // Firebase not loaded yet, try again shortly
-      //  console.log('Firebase auth not ready yet, retrying...');
-        setTimeout(checkAuthStatus, 500);
+            });
+        } else {
+            // Firebase not loaded yet, try again shortly
+            setTimeout(checkAuthStatus, 500);
+        }
     }
-}
+    
     // Initialize page
     function initMyFilesPage() {
         // Check authentication status directly
@@ -178,19 +207,47 @@ function checkAuthStatus() {
             // Hide empty state while loading
             if (emptyState) emptyState.classList.add('hidden');
             
-            // Get all files from Firebase
-            const snapshot = await database.ref('mdfiles').orderByChild('userId').equalTo(user.uid).once('value');
-            const files = snapshot.val();
+            // Get approved files from Firebase
+            const approvedSnapshot = await database.ref('mdfiles').orderByChild('userId').equalTo(user.uid).once('value');
+            const approvedFiles = approvedSnapshot.val() || {};
             
-            if (!files) {
+            // Get pending files from Firebase
+            const pendingSnapshot = await database.ref('pending_mdfiles').orderByChild('userId').equalTo(user.uid).once('value');
+            const pendingFiles = pendingSnapshot.val() || {};
+            
+            // Get rejected files from Firebase
+            const rejectedSnapshot = await database.ref('rejected_mdfiles').orderByChild('userId').equalTo(user.uid).once('value');
+            const rejectedFiles = rejectedSnapshot.val() || {};
+            
+            // Combine and process files
+            const approvedFilesArray = Object.entries(approvedFiles).map(([id, file]) => ({ 
+                id, 
+                ...file, 
+                status: 'approved' 
+            }));
+            
+            const pendingFilesArray = Object.entries(pendingFiles).map(([id, file]) => ({ 
+                id, 
+                ...file, 
+                status: file.status || 'pending' 
+            }));
+            
+            const rejectedFilesArray = Object.entries(rejectedFiles).map(([id, file]) => ({ 
+                id, 
+                ...file, 
+                status: 'rejected',
+                rejectionReason: file.rejectionReason || 'No reason provided'
+            }));
+            
+            // Combine all files
+            allUserFiles = [...approvedFilesArray, ...pendingFilesArray, ...rejectedFilesArray];
+            
+            if (allUserFiles.length === 0) {
                 // Show empty state
                 if (emptyState) emptyState.classList.remove('hidden');
                 if (myFilesContainer) myFilesContainer.classList.add('hidden');
                 return;
             }
-            
-            // Convert to array
-            allUserFiles = Object.entries(files).map(([id, file]) => ({ id, ...file }));
             
             // Hide empty state if we have files
             if (emptyState) emptyState.classList.add('hidden');
@@ -213,7 +270,12 @@ function checkAuthStatus() {
         // Filter files based on visibility
         let filteredFiles = allUserFiles;
         if (currentFilter !== 'all') {
-            filteredFiles = allUserFiles.filter(file => file.visibility === currentFilter);
+            filteredFiles = filteredFiles.filter(file => file.visibility === currentFilter);
+        }
+        
+        // Filter files based on status
+        if (currentStatusFilter !== 'all') {
+            filteredFiles = filteredFiles.filter(file => file.status === currentStatusFilter);
         }
         
         // Sort files
@@ -243,13 +305,20 @@ function checkAuthStatus() {
         myFilesContainer.innerHTML = '';
         
         if (paginatedFiles.length === 0) {
-            myFilesContainer.innerHTML = `<div class="md-file-placeholder">No ${currentFilter !== 'all' ? currentFilter : ''} files found</div>`;
+            myFilesContainer.innerHTML = `<div class="md-file-placeholder">No ${currentFilter !== 'all' ? currentFilter : ''} ${currentStatusFilter !== 'all' ? currentStatusFilter : ''} files found</div>`;
             return;
         }
         
         paginatedFiles.forEach(file => {
             const fileCard = document.createElement('div');
             fileCard.className = 'md-file-card';
+            
+            // Add status indicator to card
+            if (file.status === 'pending') {
+                fileCard.classList.add('pending-file');
+            } else if (file.status === 'rejected') {
+                fileCard.classList.add('rejected-file');
+            }
             
             // Calculate relative time
             const date = new Date(file.timestamp);
@@ -269,17 +338,45 @@ function checkAuthStatus() {
                 ? '<span class="material-icons" title="Public">public</span>' 
                 : '<span class="material-icons" title="Private">lock</span>';
             
+            // Status badge
+            let statusBadge = '';
+            switch(file.status) {
+                case 'pending':
+                    statusBadge = '<span class="status-badge pending" title="Pending approval"><span class="material-icons">pending</span> Pending</span>';
+                    break;
+                case 'approved':
+                    statusBadge = '<span class="status-badge approved" title="Approved"><span class="material-icons">check_circle</span> Approved</span>';
+                    break;
+                case 'rejected':
+                    statusBadge = '<span class="status-badge rejected" title="Rejected"><span class="material-icons">cancel</span> Rejected</span>';
+                    break;
+                default:
+                    statusBadge = '';
+            }
+            
+            // Rejection reason section (only for rejected files)
+            const rejectionReasonHTML = file.status === 'rejected' && file.rejectionReason
+                ? `<div class="rejection-reason">
+                     <div class="reason-header"><span class="material-icons">warning</span> Rejection Reason:</div>
+                     <div class="reason-text">${file.rejectionReason}</div>
+                   </div>`
+                : '';
+            
             fileCard.innerHTML = `
                 <div class="file-actions">
-                    <button class="btn-icon edit-file" data-id="${file.id}" title="Edit">
+                    <button class="btn-icon edit-file" data-id="${file.id}" data-status="${file.status}" title="Edit">
                         <span class="material-icons">edit</span>
                     </button>
-                    <button class="btn-icon delete-file" data-id="${file.id}" data-title="${file.title}" title="Delete">
+                    <button class="btn-icon delete-file" data-id="${file.id}" data-title="${file.title}" data-status="${file.status}" title="Delete">
                         <span class="material-icons">delete</span>
                     </button>
                 </div>
-                <h3 class="file-title">${file.title}</h3>
+                <div class="file-header">
+                    <h3 class="file-title">${file.title}</h3>
+                    ${statusBadge}
+                </div>
                 <div class="file-preview">${contentPreview}</div>
+                ${rejectionReasonHTML}
                 <div class="file-meta">
                     <div class="file-stats">
                         ${visibilityIcon}
@@ -293,13 +390,19 @@ function checkAuthStatus() {
                 </div>
             `;
             
-
             // Handle click to view file
             fileCard.addEventListener('click', (e) => {
                 // Don't navigate if clicked on action buttons
                 if (e.target.closest('.file-actions')) return;
                 
-                window.location.href = `view-file.html?id=${file.id}`;
+                const fileStatus = file.status || 'approved';
+                if (fileStatus === 'pending') {
+                    window.location.href = `preview-file.html?id=${file.id}&pending=true`;
+                } else if (fileStatus === 'rejected') {
+                    window.location.href = `preview-file.html?id=${file.id}&rejected=true`;
+                } else {
+                    window.location.href = `view-file.html?id=${file.id}`;
+                }
             });
             
             // Setup action buttons
@@ -307,7 +410,14 @@ function checkAuthStatus() {
             if (editBtn) {
                 editBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    window.location.href = `edit-file.html?id=${file.id}`;
+                    const fileStatus = e.target.closest('.edit-file').getAttribute('data-status');
+                    if (fileStatus === 'pending') {
+                        window.location.href = `edit-file.html?id=${file.id}&pending=true`;
+                    } else if (fileStatus === 'rejected') {
+                        window.location.href = `edit-file.html?id=${file.id}&rejected=true`;
+                    } else {
+                        window.location.href = `edit-file.html?id=${file.id}`;
+                    }
                 });
             }
             
@@ -315,7 +425,8 @@ function checkAuthStatus() {
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    openDeleteModal(file.id, file.title);
+                    const fileStatus = e.target.closest('.delete-file').getAttribute('data-status');
+                    openDeleteModal(file.id, file.title, fileStatus);
                 });
             }
             
@@ -339,11 +450,33 @@ function checkAuthStatus() {
     }
     
     // Open delete confirmation modal
-    function openDeleteModal(fileId, fileName) {
-        fileToDelete = fileId;
+    function openDeleteModal(fileId, fileName, fileStatus) {
+        fileToDelete = {
+            id: fileId,
+            status: fileStatus || 'approved'
+        };
+        
         if (deleteFileName) {
             deleteFileName.textContent = fileName;
         }
+        
+        // Update modal text based on status
+        const modalText = document.querySelector('#delete-modal p');
+        if (modalText) {
+            let statusText = '';
+            switch (fileStatus) {
+                case 'pending':
+                    statusText = 'pending';
+                    break;
+                case 'rejected':
+                    statusText = 'rejected';
+                    break;
+                default:
+                    statusText = '';
+            }
+            modalText.textContent = `Are you sure you want to delete this ${statusText} file? This action cannot be undone.`;
+        }
+        
         if (deleteModal) {
             deleteModal.classList.remove('hidden');
         }
@@ -362,14 +495,29 @@ function checkAuthStatus() {
         if (!fileToDelete) return;
         
         try {
-            // Delete from Firebase
-            await database.ref(`mdfiles/${fileToDelete}`).remove();
+            const fileId = fileToDelete.id;
+            const fileStatus = fileToDelete.status;
+            
+            // Delete from Firebase - use the correct path based on status
+            let filePath = '';
+            switch (fileStatus) {
+                case 'pending':
+                    filePath = `pending_mdfiles/${fileId}`;
+                    break;
+                case 'rejected':
+                    filePath = `rejected_mdfiles/${fileId}`;
+                    break;
+                default:
+                    filePath = `mdfiles/${fileId}`;
+            }
+            
+            await database.ref(filePath).remove();
             
             // Delete from Supabase storage
             await supabaseClient
                 .storage
                 .from('mdfiles')
-                .remove([`${fileToDelete}.md`]);
+                .remove([`${fileId}.md`]);
             
             // Close modal
             closeDeleteModal();

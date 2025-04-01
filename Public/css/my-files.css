@@ -123,6 +123,7 @@
   background-color: var(--card-bg);
   border-radius: 8px;
   border: 1px solid var(--border-color);
+  
 }
 
 .filter-group {
@@ -138,7 +139,7 @@
   margin-right: 4px;
 }
 
-.filter-btn {
+.filter-btn  , .status-filter-btn {
   background-color: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-color);
@@ -153,7 +154,7 @@
   background-color: var(--button-hover-bg);
 }
 
-.filter-btn.active {
+.filter-btn.active , .status-filter-btn.active {
   background-color: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
@@ -360,7 +361,114 @@
   margin-top: 24px;
 }
 
+/* Add these styles to your CSS file */
 
+/* Status badge styles */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.status-badge .material-icons {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.status-badge.approved {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* File card styles */
+.file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.file-title {
+  margin: 0;
+  flex: 1;
+}
+
+/* Status filter styles */
+.filter-container {
+  margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+}
+
+.filter-label {
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+
+
+/* Pending file card styling */
+.pending-file {
+  border-left: 4px solid #ffc107;
+}
+
+/* Styles for rejected files */
+.rejected-file {
+  border-left: 4px solid #e74c3c;
+  background-color: rgba(231, 76, 60, 0.05);
+}
+
+.status-badge.rejected {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.rejection-reason {
+  background-color: #fff5f5;
+  border-left: 3px solid #e74c3c;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.reason-header {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  color: #c0392b;
+}
+
+.reason-header .material-icons {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.reason-text {
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Additional style for preview page */
+#rejection-notice {
+  background-color: #fff5f5;
+  border-left: 4px solid #e74c3c;
+  padding: 15px;
+  margin-bottom: 20px;
+}
 
 /* CSS Variables for dark/light modes */
 :root[data-theme="light"] {
@@ -432,7 +540,7 @@
       padding: 12px;
   }
   
-  .filter-group {
+  .filter-group , .filter-container  {
       flex-direction: column;
       align-items: flex-start;
       gap: 8px;

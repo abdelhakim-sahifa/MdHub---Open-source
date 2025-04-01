@@ -1,6 +1,7 @@
 /* Editor Styles for MD File Sharing Hub */
 
 /* Main container */
+
 .create-file-container {
   display: flex;
 
@@ -293,9 +294,28 @@ flex-direction: column;
   .status-error .status-icon {
     color: var(--danger-color);
   }
-  
+  .modal-body{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .copy-link-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pending-msg{
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
   /* Responsive styles */
   @media (max-width: 768px) {
+    input#md-title {
+      padding: 10px 2px;
+      font-size: 1rem;
+      text-align: center;
+    }
     .editor-header {
       flex-direction: column;
       align-items: stretch;
@@ -304,7 +324,7 @@ flex-direction: column;
     
     .editor-actions {
       margin-left: 0;
-      justify-content: flex-end;
+      flex-direction: column;
     }
     
     .editor-content {
@@ -377,6 +397,73 @@ flex-direction: column;
     color: var(--danger-color);
   }
   
+
+/* Add these styles to your CSS file */
+
+.approval-msg {
+ 
+  border-left: 4px solid #4caf50;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.pending-msg {
+
+  border-left: 4px solid #ffc107;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.rejection-msg {
+ 
+  border-left: 4px solid #d32f2f;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.rejection-explanation {
+ 
+  padding: 10px;
+  margin: 5px 0 10px 0;
+  border-radius: 4px;
+  font-style: italic;
+}
+
+.material-icons {
+  margin-right: 8px;
+}
+
+.edit-btn {
+  background-color: #455a64;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 10px 8px 10px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #263238;
+}
+
+
+.modal-actions{
+  flex-wrap: wrap;
+}
   /* Animation for status changes */
   @keyframes fadeIn {
     from { opacity: 0; }

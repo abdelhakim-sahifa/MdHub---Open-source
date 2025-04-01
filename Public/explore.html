@@ -13,6 +13,86 @@
     <link rel="stylesheet" href="css/markdown.css">
     <link rel="stylesheet" href="css/explore.css">
     <link rel="stylesheet" href="css/my-files.css">
+
+
+    <style>
+        /* Additional CSS for Explore Hero Background Animation */
+
+/* Define the keyframe animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Update the explore-hero with animation properties */
+#explore-hero {
+    background: linear-gradient(135deg, #ff9800, var(--primary-color), #e91e63, var(--primary-color));
+    background-size: 300% 300%;
+    animation: gradientShift 15s ease infinite;
+    padding: 3rem 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle pattern overlay */
+#explore-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+/* Add a subtle shine effect */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+#explore-hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    animation: shine 10s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Ensure content stays on top of the animation layers */
+#explore-hero .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Dark theme specific adjustments */
+[data-theme="dark"] #explore-hero {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+    </style>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,6 +252,15 @@
             </section>
 
         
+            <section id="featured-section">
+                <div class="section-header">
+                    <h2>Featured Files</h2>
+                </div>
+                <div class="featured-carousel" id="featured-carousel">
+                    <!-- Featured files will be populated here -->
+                    <div class="md-file-placeholder">Loading featured files...</div>
+                </div>
+            </section>
 
             <section id="explore-section">
                 <div class="section-header">
@@ -197,15 +286,7 @@
                 </div>
             </section>
 
-            <section id="featured-section">
-                <div class="section-header">
-                    <h2>Featured Files</h2>
-                </div>
-                <div class="featured-carousel" id="featured-carousel">
-                    <!-- Featured files will be populated here -->
-                    <div class="md-file-placeholder">Loading featured files...</div>
-                </div>
-            </section>
+      
         </div>
     </main>
 
@@ -216,7 +297,8 @@
                 <a href="about.html">About</a>
                 <a href="terms.html">Terms</a>
                 <a href="privacy.html">Privacy</a>
-                <a href="https://github.com/abdelhakim-sahifa/MDHub" target="_blank">
+                <a href="feedback.html">Feedback</a>
+                <a href="https://github.com/abdelhakim-sahifa/MdHub---Open-source" target="_blank">
                     <span class="material-icons">code</span>
                     Source
                 </a>

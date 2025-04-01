@@ -20,7 +20,7 @@
     <!-- Marked.js for rendering markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Highlight.js for syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -28,6 +28,20 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- MathJax for math rendering -->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
+        },
+        svg: {
+            fontCache: 'global'
+        }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <header>
@@ -136,6 +150,10 @@
                         <span class="material-icons">star_border</span>
                         <span id="star-count">0</span>
                     </button>
+                    <button id="fullScreen-btn" class="btn btn-secondary">
+                        <span class="material-icons">open_in_full</span>
+                        fullscreen
+                    </button>
                     <button id="share-btn" class="btn btn-secondary">
                         <span class="material-icons">share</span>
                         Share
@@ -143,6 +161,10 @@
                     <button id="download-btn" class="btn btn-secondary">
                         <span class="material-icons">download</span>
                         Download
+                    </button>
+                    <button id="pdf-download-btn" class="btn btn-secondary" title="Download as PDF">
+                        <span class="material-icons">picture_as_pdf</span>
+                        Save as pdf
                     </button>
                     <button id="edit-btn" class="btn btn-primary" style="display: none;">
                         <span class="material-icons">edit</span>
@@ -181,7 +203,8 @@
                 <a href="about.html">About</a>
                 <a href="terms.html">Terms</a>
                 <a href="privacy.html">Privacy</a>
-                <a href="https://github.com/abdelhakim-sahifa/MDHub" target="_blank">
+                <a href="feedback.html">Feedback</a>
+                <a href="https://github.com/abdelhakim-sahifa/MdHub---Open-source" target="_blank">
                     <span class="material-icons">code</span>
                     Source
                 </a>
@@ -240,7 +263,8 @@
     </div>
 
    
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Core JavaScript Files -->
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>

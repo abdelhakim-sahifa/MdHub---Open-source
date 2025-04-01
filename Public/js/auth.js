@@ -1,6 +1,14 @@
 // Auth State and User Management
 let currentUser = null;
 
+// Initialize Firebase Auth persistence first
+if (firebase.auth) {
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .catch((error) => {
+            console.error("Auth persistence error:", error);
+        });
+}
+
 // DOM Elements for Auth UI
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -35,8 +43,7 @@ auth.onAuthStateChanged(user => {
         // User is signed in
         currentUser = user;
         
-        // Update display name in UI
-      // Update display name and profile image in UI
+        // Update display name and profile image in UI
         if (userStatus) {
             if (user.isAnonymous) {
                 userStatus.textContent = `Anonymous (${user.uid.substring(0, 6)}...)`;
@@ -49,7 +56,12 @@ auth.onAuthStateChanged(user => {
         }
         // Update UI for logged in state
         if (loginBtn) loginBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'flex';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if( userStatus) {
+            userStatus.addEventListener('click', () => {
+                window.location.href = "profile.html"
+            });
+        }
         
         // Call page-specific init functions if they exist
         if (typeof onUserAuthenticated === 'function') {
@@ -84,7 +96,7 @@ function openLoginModal() {
 
 const urlParams = new URLSearchParams(window.location.search);
 
-// Check if "embed=true" exists
+// Check if "login=true" exists
 if (urlParams.get("login") === "true") {
     openLoginModal();
 }  
@@ -92,8 +104,6 @@ if (urlParams.get("login") === "true") {
 async function loginAnonymously() {
     try {
         await auth.signInAnonymously();
-      //  console.log('User signed in anonymously');
-        
         // Close login modal if it exists
         if (loginModal) {
             loginModal.classList.add('hidden');
@@ -107,23 +117,83 @@ async function loginAnonymously() {
 async function loginWithGoogle() {
     try {
         const provider = new firebase.auth.GoogleAuthProvider();
-        await auth.signInWithPopup(provider);
-       // console.log('User signed in with Google');
+        // Add scopes if needed
+        provider.addScope('profile');
+        provider.addScope('email');
         
-        // Close login modal
-        if (loginModal) {
-            loginModal.classList.add('hidden');
+        // Set custom parameters to enable one-tap sign-in
+        provider.setCustomParameters({
+            'prompt': 'select_account'
+        });
+        
+        // Check if the user is on a mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            try {
+                // Try using signInWithPopup first for mobile
+                const result = await auth.signInWithPopup(provider);
+                console.log('Mobile popup auth successful');
+                
+                // Close login modal
+                if (loginModal) {
+                    loginModal.classList.add('hidden');
+                }
+            } catch (popupError) {
+                console.warn('Mobile popup auth failed, trying redirect:', popupError);
+                
+                // If popup fails, fall back to redirect
+                await auth.signInWithRedirect(provider);
+            }
+        } else {
+            // Use signInWithPopup for desktop
+            const result = await auth.signInWithPopup(provider);
+            
+            // Close login modal
+            if (loginModal) {
+                loginModal.classList.add('hidden');
+            }
         }
     } catch (error) {
         console.error('Error signing in with Google:', error);
-        alert(`Error signing in with Google: ${error.message}`);
+        
+        // Handle specific errors
+        if (error.code === 'auth/missing-initial-state') {
+            alert('Authentication failed due to browser privacy settings. Please ensure cookies and site data are enabled, or try a different browser.');
+        } else {
+            alert(`Error signing in with Google: ${error.message}`);
+        }
     }
 }
+
+// Handle redirect result
+// This should run on page load to handle any returning redirects
+auth.getRedirectResult().then((result) => {
+    if (result.user) {
+        // User successfully signed in after redirect
+        console.log('User signed in after redirect');
+        // Close login modal if it exists
+        if (loginModal) {
+            loginModal.classList.add('hidden');
+        }
+    }
+}).catch((error) => {
+    console.error('Error with redirect sign-in:', error);
+    
+    // Better error handling for redirect errors
+    if (error.code === 'auth/missing-initial-state') {
+        console.warn('Missing initial state error - this may happen if browser sessionStorage is inaccessible');
+        // Don't show alert here as it can create a loop on page load
+    } else if (error.code === 'auth/network-request-failed') {
+        alert('Network error. Please check your connection and try again.');
+    } else if (error.code) {
+        console.warn(`Auth redirect error (${error.code}): ${error.message}`);
+    }
+});
 
 async function logout() {
     try {
         await auth.signOut();
-        //console.log('User signed out');
     } catch (error) {
         console.error('Error signing out:', error);
         alert(`Error signing out: ${error.message}`);
@@ -151,14 +221,66 @@ function getCurrentUserDisplayName() {
     return currentUser.displayName || currentUser.email || `User (${currentUser.uid.substring(0, 6)}...)`;
 }
 
+// GitHub login button
+const githubLoginBtn = document.getElementById('github-login');
+if (githubLoginBtn) githubLoginBtn.addEventListener('click', loginWithGithub);
+
+async function loginWithGithub() {
+    try {
+        const provider = new firebase.auth.GithubAuthProvider();
+        
+        // Add scopes if needed
+        provider.addScope('read:user');
+        
+        // Check if the user is on a mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            try {
+                // Try using signInWithPopup first for mobile
+                const result = await auth.signInWithPopup(provider);
+                console.log('Mobile popup auth successful with GitHub');
+                
+                // Close login modal
+                if (loginModal) {
+                    loginModal.classList.add('hidden');
+                }
+            } catch (popupError) {
+                console.warn('Mobile popup auth failed, trying redirect:', popupError);
+                
+                // If popup fails, fall back to redirect
+                await auth.signInWithRedirect(provider);
+            }
+        } else {
+            // Use signInWithPopup for desktop
+            const result = await auth.signInWithPopup(provider);
+            
+            // Close login modal
+            if (loginModal) {
+                loginModal.classList.add('hidden');
+            }
+        }
+    } catch (error) {
+        console.error('Error signing in with GitHub:', error);
+        
+        // Handle specific errors
+        if (error.code === 'auth/account-exists-with-different-credential') {
+            alert('An account already exists with the same email address but different sign-in credentials. Sign in using the provider associated with this email address.');
+        } else {
+            alert(`Error signing in with GitHub: ${error.message}`);
+        }
+    }
+}
+
 // Export functions for use in other modules
-// These will be accessible as auth.functionName
+// Export functions for use in other modules
 window.auth = {
     getCurrentUserId,
     getCurrentUserDisplayName,
     isOwner,
     loginAnonymously,
     loginWithGoogle,
+    loginWithGithub, // Add this line
     logout,
     openLoginModal
 };
