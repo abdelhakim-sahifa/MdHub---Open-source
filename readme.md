@@ -71,25 +71,55 @@ MDHub is a web-based platform for creating, sharing, and discovering markdown fi
 
 ```
 MDHub/
-├── index.html              # Home page
+├── 404.html                # Error page
+├── about.html              # About page
 ├── create-file.html        # Create new markdown file
 ├── edit-file.html          # Edit existing file
-├── view-file.html          # View shared file
-├── search.html             # Search results
+├── embed.html              # Embed markdown file
+├── explore.html            # Explore page
+├── feedback.html           # Feedback page
+├── index.html              # Home page
 ├── my-files.html           # User's files
+├── preview-file.html       # File preview page
+├── privacy.html            # Privacy policy
+├── profile.html            # User profile page
+├── search.html             # Search results
+├── starred.html            # Starred files page
+├── terms.html              # Terms of service
+├── theme.html              # Theme settings
+├── view-file.html          # View shared file
 ├── css/
+│   ├── about.css
+│   ├── admin-feedback.css
+│   ├── admin.css
 │   ├── base.css            # Base styles
 │   ├── components.css      # UI component styles
-│   ├── markdown.css        # Markdown rendering styles
+│   ├── components-animated.css
 │   ├── editor.css          # Editor styles
-│   └── viewer.css          # File viewer styles
+│   ├── explore.css
+│   ├── feedback.css
+│   ├── markdown.css        # Markdown rendering styles
+│   ├── my-files.css
+│   ├── preview-file.css
+│   ├── search.css
+│   ├── starred.css
+│   ├── terms-and-policy.css
+│   ├── viewer.css          # File viewer styles
+│   ├── watch-ads.css
 ├── js/
 │   ├── auth.js             # Authentication logic
 │   ├── config.js           # Firebase/Supabase configuration
 │   ├── editor.js           # Markdown editor functionality
+│   ├── explore.js          # Explore page functionality
+│   ├── feedback.js         # Feedback handling
 │   ├── home.js             # Home page functionality
+│   ├── my-files.js         # User's files management
+│   ├── preview-file.js     # File preview logic
+│   ├── profile.js          # User profile handling
+│   ├── search.js           # Search functionality
+│   ├── starred.js          # Starred files logic
 │   ├── theme.js            # Theme switching logic
-│   └── viewer.js           # File viewing functionality
+│   ├── viewer.js           # File viewing functionality
 └── README.md               # Project documentation
 ```
 
