@@ -1,0 +1,477 @@
+/* Dark Mode Theme */
+:root {  
+    --dark-bg-primary: #0d1117;
+    --dark-bg-secondary: #161b22;
+    --dark-bg-tertiary: #21262d;
+    --dark-border: #30363d;
+    --dark-text-primary: #c9d1d9;
+    --dark-text-secondary: #8b949e;
+    --dark-text-tertiary: #6e7681;
+    --dark-link: #58a6ff;
+    --dark-link-hover: #79c0ff;
+    --dark-icon: #8b949e;
+    --dark-primary-btn: transparent;
+    --dark-primary-btn-hover: #21262d;
+    --dark-secondary-btn: #21262d;
+    --dark-secondary-btn-hover: #30363d;
+    --dark-danger-btn: transparent;
+    --dark-danger-btn-hover: #21262d;
+    --dark-syntax-bg: #161b22;
+    --dark-scrollbar-track: #0d1117;
+    --dark-scrollbar-thumb: #30363d;
+    --dark-scrollbar-thumb-hover: #6e7681;
+    --dark-modal-overlay: rgba(1, 4, 9, 0.8);
+    --dark-code-highlight: rgba(255, 255, 255, 0.05);
+    --dark-tag-bg: #21262d;
+    --dark-hover-item: #161b22;
+    --dark-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+  *{
+    font-family: "Inter", sans-serif;
+
+  }
+  .sahifa-logo{
+    font-family: "Poppins", sans-serif;
+    font-weight:800;
+   
+  }
+
+  .material-icons.check{
+    font-size: 14px;
+  }
+  /*TODO: remove this
+  
+  .theme-toggle {
+    display: none !important;
+  }
+  #auth-container{
+    display: none !important;
+   }
+  */
+  
+ 
+  /* Apply dark theme when data-theme attribute is "dark" */
+  /* Google Login Button */
+.btn-google {
+  background-color: #ffffff;
+  color: #757575;
+  border: 1px solid #dadce0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+}
+
+.btn-google:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-google .fa-google {
+  color: black;
+  font-size: 18px;
+}
+
+.btn-github {
+  background-color: #24292e;
+  color: white;
+}
+
+.btn-github:hover {
+  background-color: #1a1e22;
+}
+/* Update login modal styling */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-body .btn-block {
+  width: 100%;
+  padding: 12px;
+}
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+  
+  html[data-theme="dark"] body {
+    background-color: var(--dark-bg-primary);
+    color: var(--dark-text-primary);
+  }
+  
+  /* Header styles */
+  html[data-theme="dark"] header {
+    background-color: var(--dark-bg-secondary);
+    border-bottom: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .logo-container h1 {
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .search-container {
+    background-color: var(--dark-bg-tertiary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .search-container input {
+    background-color: transparent;
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .search-container span {
+    color: var(--dark-icon);
+  }
+  
+  /* Theme toggle button - show sun icon in dark mode */
+  html[data-theme="dark"] .theme-toggle .material-icons {
+    content: "light_mode";
+  }
+  
+  html[data-theme="dark"] .theme-toggle {
+    color: var(--dark-icon);
+  }
+  
+  /* User status */
+  html[data-theme="dark"] .user-status {
+    color: var(--dark-text-secondary);
+  }
+  
+  /* Button styles */
+  html[data-theme="dark"] .btn {
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .btn-primary {
+    background-color: var(--dark-primary-btn);
+    color: #ffffff;
+  }
+  
+  html[data-theme="dark"] .btn-primary:hover {
+    background-color: var(--dark-primary-btn-hover);
+  }
+  
+  html[data-theme="dark"] .btn-secondary {
+    background-color: var(--dark-secondary-btn);
+    color: var(--dark-text-primary);
+    border-color: var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .btn-secondary:hover {
+    background-color: var(--dark-secondary-btn-hover);
+  }
+  
+  html[data-theme="dark"] .btn-danger {
+    background-color: var(--dark-danger-btn);
+    color: #ffffff;
+  }
+  
+  html[data-theme="dark"] .btn-danger:hover {
+    background-color: var(--dark-danger-btn-hover);
+  }
+  
+  html[data-theme="dark"] .btn-icon {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] .btn-icon:hover {
+    background-color: var(--dark-bg-tertiary);
+  }
+  
+  /* Sidebar styles */
+  html[data-theme="dark"] .sidebar {
+    background-color: var(--dark-bg-primary);
+    border-right: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .sidebar nav ul li a {
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .sidebar nav ul li a:hover {
+    background-color: var(--dark-hover-item);
+  }
+  
+  html[data-theme="dark"] .sidebar nav ul li.active a {
+    background-color: var(--dark-bg-tertiary);
+  }
+  
+  html[data-theme="dark"] .sidebar-tags h3,
+  html[data-theme="dark"] .file-toc h3 {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] .tag {
+    background-color: var(--dark-tag-bg);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .tag:hover {
+    background-color: var(--dark-bg-tertiary);
+  }
+  
+  /* Content container */
+  html[data-theme="dark"] .content-container,
+  html[data-theme="dark"] .viewer-container {
+    background-color: var(--dark-bg-primary);
+  }
+  
+  html[data-theme="dark"] .section-header h2 {
+    color: var(--dark-text-primary);
+  }
+  
+  /* Main viewer styles */
+  html[data-theme="dark"] .viewer-sidebar {
+    background-color: var(--dark-bg-secondary);
+    border-right: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .file-info h2 {
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .file-metadata {
+    color: var(--dark-text-tertiary);
+  }
+  
+  html[data-theme="dark"] .table-of-contents {
+    border-top: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] #toc-list a {
+    color: var(--dark-link);
+  }
+  
+  html[data-theme="dark"] .breadcrumb {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] .content-header {
+    border-bottom: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .breadcrumb a {
+    color: var(--dark-link);
+  }
+  
+  /* Markdown styles */
+  html[data-theme="dark"] .markdown-content {
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .markdown-content h1,
+  html[data-theme="dark"] .markdown-content h2,
+  html[data-theme="dark"] .markdown-content h3,
+  html[data-theme="dark"] .markdown-content h4,
+  html[data-theme="dark"] .markdown-content h5,
+  html[data-theme="dark"] .markdown-content h6 {
+    color: var(--dark-text-primary);
+    border-bottom-color: var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .markdown-content a {
+    color: var(--dark-link);
+  }
+  
+  html[data-theme="dark"] .markdown-content a:hover {
+    color: var(--dark-link-hover);
+  }
+  
+  html[data-theme="dark"] .markdown-content blockquote {
+    color: var(--dark-text-secondary);
+    border-left-color: var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .markdown-content hr {
+    background-color: var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .markdown-content code {
+    background-color: var(--dark-syntax-bg);
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .markdown-content pre {
+    background-color: var(--dark-syntax-bg);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .markdown-content table {
+    border-color: var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .markdown-content th,
+  html[data-theme="dark"] .markdown-content td {
+    border-color: var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .markdown-content tr:nth-child(2n) {
+    background-color: var(--dark-bg-secondary);
+  }
+  
+  /* Editor styles */
+  html[data-theme="dark"] .editor-container {
+    background-color: var(--dark-bg-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .editor-toolbar {
+    background-color: var(--dark-bg-secondary);
+    border-bottom: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .toolbar-btn {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] .toolbar-btn:hover {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .editor-panel textarea {
+    background-color: var(--dark-bg-primary);
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .preview-panel {
+    border-left: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .title-input {
+    background-color: var(--dark-bg-primary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .metadata-section {
+    border-top: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .metadata-section input,
+  html[data-theme="dark"] .metadata-section select {
+    background-color: var(--dark-bg-secondary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  /* Comments section */
+  html[data-theme="dark"] .comments-section {
+    border-top: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .comment-form textarea {
+    background-color: var(--dark-bg-secondary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .no-comments {
+    color: var(--dark-text-tertiary);
+  }
+  
+  /* Modal styles */
+  html[data-theme="dark"] .modal {
+    background-color: var(--dark-modal-overlay);
+  }
+  
+  html[data-theme="dark"] .modal-content {
+    background-color: var(--dark-bg-secondary);
+    border: 1px solid var(--dark-border);
+    box-shadow: var(--dark-box-shadow);
+  }
+  
+  html[data-theme="dark"] .modal-header {
+    border-bottom: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .modal-close {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] .share-container input,
+  html[data-theme="dark"] .share-container textarea {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .share-option {
+    background-color: var(--dark-bg-tertiary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  /* Card and grid styles */
+  html[data-theme="dark"] .md-files-grid .md-file-card {
+    background-color: var(--dark-bg-secondary);
+    border: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] .md-file-card:hover {
+    box-shadow: var(--dark-box-shadow);
+  }
+  
+  html[data-theme="dark"] .md-file-card .file-title {
+    color: var(--dark-text-primary);
+  }
+  
+  html[data-theme="dark"] .md-file-card .file-meta {
+    color: var(--dark-text-secondary);
+  }
+  
+  /* Footer styles */
+  html[data-theme="dark"] footer {
+    background-color: var(--dark-bg-secondary);
+    border-top: 1px solid var(--dark-border);
+  }
+  
+  html[data-theme="dark"] footer p {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] footer a {
+    color: var(--dark-text-secondary);
+  }
+  
+  html[data-theme="dark"] footer a:hover {
+    color: var(--dark-text-primary);
+  }
+  
+  /* Custom scrollbar for dark mode */
+  html[data-theme="dark"] ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  html[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--dark-scrollbar-track);
+  }
+  
+  html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--dark-scrollbar-thumb);
+    border-radius: 5px;
+  }
+  
+  html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-scrollbar-thumb-hover);
+  }
+  
+  /* Loading spinner for dark mode */
+  html[data-theme="dark"] .loading-spinner {
+    border: 3px solid var(--dark-bg-tertiary);
+    border-top: 3px solid var(--dark-link);
+  }
+  
+  /* Focus styles */
+  html[data-theme="dark"] input:focus,
+  html[data-theme="dark"] textarea:focus,
+  html[data-theme="dark"] select:focus,
+  html[data-theme="dark"] button:focus {
+    outline: 2px solid var(--dark-link);
+    outline-offset: 1px;
+  }

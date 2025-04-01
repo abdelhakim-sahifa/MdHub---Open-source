@@ -1,0 +1,18 @@
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    margin-bottom: 0;
+}
+.file-meta{
+    display: flex;
+  
+    align-items: center !important;
+   
+}
+
+.verified{
+    font-size: 12px !important;
+   
+}

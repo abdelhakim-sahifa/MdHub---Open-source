@@ -1,0 +1,213 @@
+/* Enhanced About Page Styling */
+
+/* About Section Layout */
+#about-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Section Headers */
+.about-content h3 {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Mission Section */
+.about-intro {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.about-intro p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Features Grid Enhancement */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.feature-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card .material-icons {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.feature-card h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Story Section */
+.about-story {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.about-story p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+/* Team Section */
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.team-member {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+}
+
+.member-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    margin: 0 auto 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.member-avatar::after {
+    content: '\1F464';
+    font-size: 60px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.team-member h4 {
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.team-member p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Contact Section */
+.about-contact {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.about-contact a {
+    color: var(--primary-color);
+    font-weight: 500;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.about-contact a:hover {
+    color: var(--primary-dark);
+}
+
+/* Animation for load-in */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.about-intro, .about-features, .about-story, .about-team, .about-contact {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.about-features { animation-delay: 0.2s; }
+.about-story { animation-delay: 0.4s; }
+.about-team { animation-delay: 0.6s; }
+.about-contact { animation-delay: 0.8s; }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .team-members {
+        justify-content: center;
+    }
+    
+    .team-member {
+        flex-basis: 100%;
+    }
+    
+    #about-section {
+        padding: 1rem;
+    }
+}
+
+/* Custom scrollbar for the about page */
+.content-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content-container::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+.content-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 20px;
+}
+
+/* Dark mode specific enhancements */
+[data-theme="dark"] .feature-card {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .about-story {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .team-member {
+    background-color: rgba(255, 255, 255, 0.05);
+}
