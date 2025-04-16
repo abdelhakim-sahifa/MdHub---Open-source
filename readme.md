@@ -9,8 +9,6 @@
 ![Open Issues](https://img.shields.io/github/issues/abdelhakim-sahifa/MdHub---Open-source) ![Closed Issues](https://img.shields.io/github/issues-closed/abdelhakim-sahifa/MdHub---Open-source) ![Pull Requests](https://img.shields.io/github/issues-pr/abdelhakim-sahifa/MdHub---Open-source) ![Closed PRs](https://img.shields.io/github/issues-pr-closed/abdelhakim-sahifa/MdHub---Open-source) ![License](https://img.shields.io/github/license/abdelhakim-sahifa/MdHub---Open-source) ![Contributors](https://img.shields.io/github/contributors/abdelhakim-sahifa/MdHub---Open-source) ![Repo Size](https://img.shields.io/github/repo-size/abdelhakim-sahifa/MdHub---Open-source)
 
 
-Let me know if you want custom badges or any other details! 🚀
-
 
 MDHub is a web-based platform for creating, sharing, and discovering markdown files. It provides a clean, intuitive interface for writing markdown content and sharing it with others.
 
